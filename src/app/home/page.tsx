@@ -1,32 +1,19 @@
-'use client'
-import Image from "next/image";
-import TravelForm from "../components/TravelForm";
-import NavBar from "../components/NavBar";
-import Logo from "../../../public/logo.png"
-import { RiAccountCircleFill } from "react-icons/ri";
-//import { getServerSession } from "next-auth";
-import { signOut } from "next-auth/react"
-//import { authOptions } from "@/lib/auth/options";
-import { redirect } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { DropDown } from "../components/DropDown";
-//import { CountryList } from "@/features/countries/components/countryList";
-//import { UserList } from "@/features/users/components/UserList";
-export default function Home() {
+// app/home/page.tsx
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth/options'
+import { redirect } from 'next/navigation'
+import Logo from '../../../public/logo.png'
+import Image from 'next/image'
+import NavBar from '../components/NavBar'
+import TravelForm from '../components/TravelForm'
+import ProfileMenuClient from './components/ProfileMenuClient' // <- componente client
 
-  const { data: session, status } = useSession()
+export default async function Home() {
+  const session = await getServerSession(authOptions)
 
-  if (status === "unauthenticated" || session) {
-    return redirect('/login')
-  }
-
-  const profileMenu = [
-    { label: "Perfil", onClick: () => { console.log("Perfil") } },
-    { label: "Sair", value: "sair", onClick: () => { signOut() } },
-    { label: "Configurações", value: "configurações", onClick: () => { console.log("configurações") } },
-    { label: "Ajuda", value: "ajuda", onClick: () => { console.log("ajuda") } },
-    { label: "Minhas viagens", value: "minhas viagens", onClick: () => { console.log("minhas viagens") } },
-  ]
+  // if (!session) {
+  //   redirect('/login')
+  // }
 
   return (
     <main className="flex flex-col min-h-screen w-full h-full items-center">
@@ -36,19 +23,12 @@ export default function Home() {
           <NavBar />
         </div>
 
-        <DropDown options={profileMenu} buttonLabel={<RiAccountCircleFill size={40} color="black" />} />
-        {/* <button
-          className="absolute right-10 text-black rounded-full"
-          >
-          <RiAccountCircleFill size={40} />
-        </button> */}
+        <ProfileMenuClient /> {/* CLIENT COMPONENT */}
       </header>
 
       <div className="m-auto h-1/4 w-[80vw] p-6 rounded-lg shadow-lg shadow-blue-500/50">
-
-
         <TravelForm />
       </div>
     </main>
-  );
+  )
 }
