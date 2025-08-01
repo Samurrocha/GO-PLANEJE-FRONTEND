@@ -7,11 +7,18 @@ import { RiAccountCircleFill } from "react-icons/ri";
 //import { getServerSession } from "next-auth";
 import { signOut } from "next-auth/react"
 //import { authOptions } from "@/lib/auth/options";
-//import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { DropDown } from "../components/DropDown";
 //import { CountryList } from "@/features/countries/components/countryList";
 //import { UserList } from "@/features/users/components/UserList";
 export default function Home() {
+
+  const { data: session, status } = useSession()
+
+  if (status === "unauthenticated" || session) {
+    return redirect('/login')
+  }
 
   const profileMenu = [
     { label: "Perfil", onClick: () => { console.log("Perfil") } },
@@ -24,7 +31,7 @@ export default function Home() {
   return (
     <main className="flex flex-col min-h-screen w-full h-full items-center">
       <header className="flex items-center bg-cyan-500 h-[10vh] w-full px-4 relative font-bold text-white text-lg">
-        <Image src={Logo} alt="Logo" className="w-[7vw] mr-auto" priority/>
+        <Image src={Logo} alt="Logo" className="w-[7vw] mr-auto" priority />
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <NavBar />
         </div>
@@ -39,7 +46,7 @@ export default function Home() {
 
       <div className="m-auto h-1/4 w-[80vw] p-6 rounded-lg shadow-lg shadow-blue-500/50">
 
-        
+
         <TravelForm />
       </div>
     </main>
