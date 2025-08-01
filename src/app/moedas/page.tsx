@@ -1,9 +1,9 @@
 'use client';
 // pages/index.tsx
 import CurrencyConverter from '@/app/components/ConversorMoeda';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Container, Typography } from '@mui/material';
+import { useState } from 'react';
+//import axios from 'axios';
+import { Typography } from '@mui/material';
 
 export default function Moedas() {
     const [criarAlerta, setCriarAlerta] = useState(false);

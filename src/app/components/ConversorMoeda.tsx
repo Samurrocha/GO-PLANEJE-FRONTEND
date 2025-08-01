@@ -2,9 +2,9 @@
 import { useEffect, useState } from "react";
 import {
     TextField,
-    MenuItem,
+//    MenuItem,
     Grid,
-    InputAdornment,
+ //   InputAdornment,
     Typography,
     Box,
     IconButton,
@@ -12,7 +12,7 @@ import {
     CircularProgress
 } from "@mui/material";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import axios from "axios";
+//import axios from "axios";
 import { useCurrenciesQuote } from "@/features/currenciesQuote/hooks/useCurrencieQuote";
 import { useCountries } from "@/features/countries/hooks/useCountries";
 
@@ -25,7 +25,7 @@ const CurrencyConverter = () => {
     const [convertedAmount, setConvertedAmount] = useState(0);
     const [currenciesList, setCurrenciesList] = useState<string[]>([]);
 
-    const { data: countries, isLoading: isLoadingCountries, error: countriesError } = useCountries()
+    const { data: countries,  } = useCountries()
     const { data: currenciesQuote, isLoading: isLoadingCurrencies, error: currenciesQuoteError } = useCurrenciesQuote(fromCurrency, toCurrency)
 
 

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useState, ReactNode } from "react";
 import { Button, Menu, MenuItem } from "@mui/material";
 
 interface OptionProps {
@@ -10,7 +10,7 @@ interface OptionProps {
 
 interface DropDownProps {
     options: OptionProps[];
-    buttonLabel: any;
+    buttonLabel: ReactNode;
 }
 
 export function DropDown({ options, buttonLabel }: DropDownProps) {

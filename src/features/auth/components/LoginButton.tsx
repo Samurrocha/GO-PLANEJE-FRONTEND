@@ -1,7 +1,7 @@
 'use client'
 
-import { signIn, signOut, useSession } from 'next-auth/react'
-import { LoginButtonProps } from '@/features/auth/types/LoginButton'
+import { signIn, useSession } from 'next-auth/react'
+import { LoginButtonProps } from '@/features/auth/types/loginButton'
 import { redirect } from 'next/navigation'
 export const LoginButton = ({ provider, label, icon, onClick, styleClassName, type }: LoginButtonProps) => {
   const { data: session, status } = useSession()

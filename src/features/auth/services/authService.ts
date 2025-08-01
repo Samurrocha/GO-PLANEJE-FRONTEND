@@ -1,8 +1,7 @@
-import { api } from '@/lib/api'
-import { Auth } from '@/types/auth'
-import { User } from '@/types/user'
+import { api_java } from '@/lib/api'
+import { AuthRequest, AuthResponse } from '@/types/auth'
 
-export const loginUser = async (data: Auth): Promise<User> => {
-  const response = await api.post('/auth/login', data)
+export const loginUser = async (data: AuthRequest): Promise<AuthResponse> => {
+  const response = await api_java.post('/auth/login', data)
   return response.data
 }

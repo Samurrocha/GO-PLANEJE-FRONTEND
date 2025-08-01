@@ -4,13 +4,13 @@ import TravelForm from "../components/TravelForm";
 import NavBar from "../components/NavBar";
 import Logo from "../../../public/logo.png"
 import { RiAccountCircleFill } from "react-icons/ri";
-import { getServerSession } from "next-auth";
+//import { getServerSession } from "next-auth";
 import { signOut } from "next-auth/react"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
+//import { authOptions } from "@/lib/auth/options";
+//import { redirect } from "next/navigation";
 import { DropDown } from "../components/DropDown";
-import { CountryList } from "@/features/countries/components/countryList";
-import { UserList } from "@/features/users/components/UserList";
+//import { CountryList } from "@/features/countries/components/countryList";
+//import { UserList } from "@/features/users/components/UserList";
 export default function Home() {
 
   const profileMenu = [

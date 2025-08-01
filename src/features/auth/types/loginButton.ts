@@ -1,4 +1,4 @@
-import {icon} from "@/types/icon"
+//import {icon} from "@/types/icon"
 
 type Provider = "google" | "github" | "credentials";
 

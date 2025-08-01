@@ -1,9 +1,9 @@
 export interface User {
     'id': string;
-    'userName': string;
+    'userName'?: string;
     'email': string;
     'password': string;
-    'createdAt'?: Date
+    'createdAt': Date
 }
 
 export type UserResponse = Omit<User, "password">;

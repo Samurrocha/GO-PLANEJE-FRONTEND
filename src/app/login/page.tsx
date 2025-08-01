@@ -24,9 +24,9 @@ const Login: NextPage = () => {
         setPasswordVisible((prev) => !prev);
     };
 
-    const handleGoogleRegister = () => {
-        console.log("Registrar com Google");
-    }
+    // const handleGoogleRegister = () => {
+    //     console.log("Registrar com Google");
+    // }
 
     return (
 
