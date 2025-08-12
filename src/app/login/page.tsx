@@ -6,12 +6,14 @@ import Link from 'next/link';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { FcGoogle } from 'react-icons/fc';
 import SeoHead from '../components/SeoHead';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { LoginButton } from '@/features/auth/components/LoginButton';
 import { redirect } from 'next/navigation';
+import { AuthRequest } from '@/features/auth/types/auth';
 
 
 const Login: NextPage = () => {
+    const [formData, setFormData] = useState<AuthRequest>({ email: '', password: '' });
     const { data: session, status } = useSession()
 
     if (status === 'authenticated' || session) {
@@ -20,13 +22,19 @@ const Login: NextPage = () => {
 
     const [passwordVisible, setPasswordVisible] = useState(false);
 
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value, // atualiza a propriedade correta: email ou password
+    }));
+  }
+
     const handleTogglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
     };
-
-    // const handleGoogleRegister = () => {
-    //     console.log("Registrar com Google");
-    // }
 
     return (
 
@@ -49,8 +57,11 @@ const Login: NextPage = () => {
                         </label>
                         <input
                             id="email"
+                            name='email'
                             type="email"
                             required
+                            value={formData.email}
+                            onChange={handleChange}
                             placeholder="seuemail@exemplo.com"
                             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                         />
@@ -63,8 +74,11 @@ const Login: NextPage = () => {
                         <div className="relative">
                             <input
                                 id="password"
+                                name='password'
                                 type={passwordVisible ? 'text' : 'password'}
                                 required
+                                value={formData.password}
+                                onChange={handleChange}
                                 placeholder="Digite sua senha"
                                 className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                             />
@@ -99,6 +113,7 @@ const Login: NextPage = () => {
                         label="Login"
                         styleClassName="w-full py-3 bg-blue-600 text-black font-semibold rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
                         type="submit"
+                        data={{email: formData.email, password: formData.password}}
                     />
 
                 </form>

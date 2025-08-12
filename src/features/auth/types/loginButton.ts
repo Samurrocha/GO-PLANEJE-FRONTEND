@@ -1,5 +1,4 @@
-//import {icon} from "@/types/icon"
-
+import { AuthRequest } from "./auth";
 type Provider = "google" | "github" | "credentials";
 
 export interface LoginButtonProps {
@@ -9,5 +8,6 @@ export interface LoginButtonProps {
   onClick?: () => void;
   styleClassName?: string;
   type?: "button" | "submit";
+  data?: AuthRequest
 
 }
