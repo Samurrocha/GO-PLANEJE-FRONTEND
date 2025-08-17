@@ -1,7 +1,7 @@
 // app/home/page.tsx
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth/options'
-import { redirect } from 'next/navigation'
+//import { getServerSession } from 'next-auth'
+//import { authOptions } from '@/lib/auth/options'
+//mport { redirect } from 'next/navigation'
 import Logo from '../../../public/logo.png'
 import Image from 'next/image'
 import NavBar from '../components/NavBar'
@@ -9,7 +9,7 @@ import TravelForm from '../components/TravelForm'
 import ProfileMenuClient from './components/ProfileMenuClient' // <- componente client
 
 export default async function Home() {
-  const session = await getServerSession(authOptions)
+  //const session = await getServerSession(authOptions)
 
   // if (!session) {
   //   redirect('/login')
@@ -23,7 +23,7 @@ export default async function Home() {
           <NavBar />
         </div>
 
-        <ProfileMenuClient /> {/* CLIENT COMPONENT */}
+        <ProfileMenuClient /> {/*CLIENT COMPONENT} */}
       </header>
 
       <div className="m-auto h-1/4 w-[80vw] p-6 rounded-lg shadow-lg shadow-blue-500/50">

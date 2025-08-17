@@ -1,19 +1,19 @@
 // src/middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse,NextRequest } from 'next/server';
+import { getToken } from "next-auth/jwt";
 
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value; // Ou verifique session, JWT, etc.
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-  const protectedRoutes = ['/home', '/dashboard', '/profile', '/moedas', '/schedule_trips']; // rotas protegidas
+  const protectedRoutes = ['/home', '/dashboard', '/profile', '/moedas', '/scheduled_trips']; // rotas protegidas
 
   const isProtectedRoute = protectedRoutes.some(route =>
-    request.nextUrl.pathname.startsWith(route)
+    req.nextUrl.pathname.startsWith(route)
   );
 
   if (isProtectedRoute && !token) {
     // Redireciona para /login
-    const loginUrl = new URL('/login', request.url);
+    const loginUrl = new URL('/login', req.url);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -22,6 +22,6 @@ export function middleware(request: NextRequest) {
 
 // Define quais rotas serão verificadas
 export const config = {
-  matcher: ['/home,/dashboard, /profile, /moedas, /schedule_trips'],
+  matcher: ['/home','/dashboard', '/profile', '/moedas', '/scheduled_trips'],
 
 };

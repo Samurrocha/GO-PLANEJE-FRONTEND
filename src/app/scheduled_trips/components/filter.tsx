@@ -48,7 +48,7 @@ export default function FiltroViagens(): JSX.Element {
   const handleInputInicialChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    let valor = event.target.value;
+    const valor = event.target.value;
     setInputInicial(valor);
 
     let numValor = valor === "" ? 0 : Number(valor);
@@ -61,7 +61,7 @@ export default function FiltroViagens(): JSX.Element {
   const handleInputFinalChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    let valor = event.target.value;
+    const valor = event.target.value;
     setInputFinal(valor);
 
     let numValor = valor === "" ? orcamento[0] : Number(valor);

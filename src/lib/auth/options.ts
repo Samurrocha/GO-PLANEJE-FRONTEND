@@ -1,9 +1,8 @@
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { loginUser } from '@/features/auth/services/authService'
-import jwt from 'jsonwebtoken'
-import { JWT } from 'next-auth/jwt'
-import { User, Session } from 'next-auth'
+import { jwtDecode } from 'jwt-decode'
+import { AuthSession, JwtPayload, AuthUser, AuthJWT } from '@/features/auth/types/auth'
 
 export const authOptions = {
   providers: [
@@ -23,63 +22,79 @@ export const authOptions = {
       // Login via sua API Java
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const response = await loginUser({ email: credentials.email, password: credentials.password });
 
-        if (response && 'token' in response && response.token) {
-          const validatedUser = jwt.verify(response.token, process.env.JWT_SECRET!);
+        try {
+          const response = await loginUser({
+            email: credentials.email,
+            password: credentials.password,
+          });
 
-          if (validatedUser && typeof validatedUser !== 'string' && 'sub' in validatedUser && 'email' in validatedUser) {
-            const user: User = {
-              id: 'validatedUser.sub',
-              email: validatedUser.email,
+          if (!response || !('acessToken' in response)|| !('refreshToken' in response)) return null;
 
-            };
+          const validatedUser = jwtDecode<JwtPayload>(response.acessToken);
 
-            return user
-          }
+          if (!validatedUser?.sub) return null;
 
+          const user: AuthUser = {
+            id: validatedUser.sub,
+            email: validatedUser.email,
+            name: validatedUser.username || null,
+            role: validatedUser.role,
+            exp: validatedUser.exp,
+            refreshToken: response.refreshToken
+          };
+
+          return user;
+        } catch (error) {
+          console.error("Authorize error:", error);
+          return null;
         }
-        return null
       }
 
     }),
   ],
 
-pages: {
-  signIn: "/login",
+  pages: {
+    signIn: "/login",
   },
 
+  callbackify: {
+    async jwt({ token, user }: { token: AuthJWT, user?: AuthUser }) {
+      if (user) {
+        token.sub = user.id
+        token.email = user.email
+        token.name = user.name ? user.name : null
+        token.role = user.role
+        token.refreshToken = user.refreshToken
+        token.exp = user.exp
 
-callbackify: {
-    async jwt({ token, user } : { token: JWT, user?: User }) {
-    if (user) {
-      token.email = user.email
-      token.id = user.id
+        // Se o seu usuário tem um accessToken externo (ex: da sua API Java),
+        // if (user.token) {
+        //   token.accessToken = (user as any).token;
+        // }
+      }
+      return token
+    },
 
-      // Se o seu usuário tem um accessToken externo (ex: da sua API Java),
-      // if (user.token) {
-      //   token.accessToken = (user as any).token;
-      // }
-    }
-    return token
-  },
-
-    async session({ session, token } : { session: any, token: JWT }) {
-    if (token) {
-      session.user = {
-        email: token.email,
-        id: token.id
+    async session({ session, token }: { session: AuthSession, token: AuthJWT }) {
+      if (token) {
+        session.user = {
+          id: token.sub ? token.sub : '',
+          email: token.email,
+          name: token.name,
+          role: token.role,
+          refreshToken: token.refreshToken,
+          exp: token.exp
+        }
       }
 
       //session.accessToken = token.accessToken; // Se você armazenou o accessToken no token JWT
 
-
       return session
     }
-  }
-},
 
+  },
 
+  secret: process.env.NEXTAUTH_SECRET,
 
-secret: process.env.NEXTAUTH_SECRET,
 }

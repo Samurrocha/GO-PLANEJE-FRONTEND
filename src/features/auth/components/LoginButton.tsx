@@ -1,31 +1,29 @@
 'use client'
 
 import { signIn, useSession } from 'next-auth/react'
-import { LoginButtonProps } from '@/features/auth/types/loginButton'
 import { redirect } from 'next/navigation'
-export const LoginButton = ({ provider, label, icon, onClick, styleClassName, type, data }: LoginButtonProps) => {
+import { LoginButtonProps } from '@/features/auth/types/loginButton'
+export const LoginButton = ({ provider, label, icon, styleClassName, type, data }: LoginButtonProps) => {
   const { data: session, status } = useSession()
 
   if (status === 'authenticated' || session) return redirect('/home')
 
-  if (!onClick) {
-    onClick = async () => {
+  const onClick = async () => {
 
 
-      await signIn(provider || 'credentials', { 
-        redirect:true,
-        email: data?.email,
-        password: data?.password,
-        callbackUrl: '/home' 
-      })
+    await signIn(provider, {
+      redirect: true,
+      email: data?.email,
+      password: data?.password,
+      callbackUrl: '/home'
+    })
 
-    }
   }
 
   return (
 
     <button
-      onClick={onClick}
+      onClick={provider ? onClick : undefined}
       className={styleClassName}
       type={type || 'button'}
     >

@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/lib/auth/SessionProvider";
 import { ReactQueryProvider } from "@/lib/react-query/ReactQueryProvider";
+import { MuiProvider } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,11 +23,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>
-          <ReactQueryProvider>
-            {children}
-          </ReactQueryProvider>
-        </SessionProvider>
+        <MuiProvider>
+          <SessionProvider>
+            <ReactQueryProvider>
+              {children}
+            </ReactQueryProvider>
+          </SessionProvider>
+        </MuiProvider>
       </body>
     </html>
   );

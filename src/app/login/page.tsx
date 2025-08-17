@@ -6,31 +6,35 @@ import Link from 'next/link';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { FcGoogle } from 'react-icons/fc';
 import SeoHead from '../components/SeoHead';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { LoginButton } from '@/features/auth/components/LoginButton';
-import { redirect } from 'next/navigation';
+//import { redirect } from 'next/navigation';
 import { AuthRequest } from '@/features/auth/types/auth';
 
 
 const Login: NextPage = () => {
     const [formData, setFormData] = useState<AuthRequest>({ email: '', password: '' });
-    const { data: session, status } = useSession()
+    //const { data: session, status } = useSession()
 
-    if (status === 'authenticated' || session) {
-        redirect('/home')
-    }
+//    if (status === 'loading') {
+//   return <div>Carregando...</div>; // ou um loader
+// }
+
+// if (status === 'authenticated' && session) {
+//   redirect('/home');
+// }
 
     const [passwordVisible, setPasswordVisible] = useState(false);
 
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target;
+        const { name, value } = e.target;
 
-    setFormData(prev => ({
-      ...prev,
-      [name]: value, // atualiza a propriedade correta: email ou password
-    }));
-  }
+        setFormData(prev => ({
+            ...prev,
+            [name]: value, // atualiza a propriedade correta: email ou password
+        }));
+    }
 
     const handleTogglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
@@ -50,7 +54,19 @@ const Login: NextPage = () => {
                 <p className="text-center text-black-600 mb-8">
                     Organize suas viagens de forma simples e prática
                 </p>
-                <form noValidate>
+                <form
+                    noValidate
+                    method='POST'
+                    onSubmit={async (e) => {
+                        e.preventDefault(); // evita o GET
+                        await signIn('credentials', {
+                            redirect: true,
+                            email: formData?.email,
+                            password: formData?.password,
+                            callbackUrl: '/home'
+                        });
+                    }}
+                >
                     <div className="mb-5">
                         <label htmlFor="email" className="block text-black-700 font-medium mb-2">
                             Email
@@ -113,7 +129,6 @@ const Login: NextPage = () => {
                         label="Login"
                         styleClassName="w-full py-3 bg-blue-600 text-black font-semibold rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
                         type="submit"
-                        data={{email: formData.email, password: formData.password}}
                     />
 
                 </form>
